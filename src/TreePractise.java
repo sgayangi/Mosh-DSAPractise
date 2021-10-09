@@ -3,7 +3,7 @@ package src;
 public class TreePractise {
     public static void main(String[] args) {
         Tree tree1 = new Tree();
-        tree1.insertChild(7);
+        tree1.insertChild(10);
         tree1.insertChild(4);
         tree1.insertChild(9);
         tree1.insertChild(2);
@@ -32,7 +32,10 @@ public class TreePractise {
         tree2.insertChild(8);
         tree2.insertChild(10);
 
-        System.out.println(tree1.equalTree(tree2));
+//        System.out.println(tree1.equalTree(null));
+        tree1.swapRoot();
+        System.out.println(tree1.isTreeBinarySearchTree());
+        tree1.printNodesAtKDistance(2);
     }
 }
 
@@ -197,23 +200,54 @@ class Tree {
         if (root == null && tree.root == null) {
             return true;
         }
-        if (tree.root == null) {
-            throw new IllegalArgumentException("Cannot compare empty tree");
+        if (tree == null || tree.root == null) {
+            throw new IllegalArgumentException("Cannot compare empty tree/null tree");
         }
-        if (isEqualNode(root, tree.root)) {
-            return true;
-        }
-        return false;
+        return isEqualNode(root, tree.root);
+    }
+
+    public void swapRoot() {
+        var temp = root.leftChild;
+        root.leftChild = root.rightChild;
+        root.rightChild = temp;
     }
 
     private boolean isEqualNode(Node root1, Node root2) {
         if (root1 == null && root2 == null) {
             return true;
         }
-        if (isLeaf(root1) && (isLeaf(root2))) {
-            return root1.value == root2.value;
+        if (root1 != null && root2 != null) {
+            return root1.value == root2.value && isEqualNode(root1.leftChild, root2.leftChild) && isEqualNode(root1.rightChild, root2.rightChild);
         }
-        return isEqualNode(root1.leftChild, root2.leftChild) && isEqualNode(root1.rightChild, root2.rightChild);
+        return false;
+    }
+
+    public boolean isTreeBinarySearchTree() {
+        if (root == null) throw new IllegalStateException();
+        return isTreeBinarySearchTree(root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+
+    private boolean isTreeBinarySearchTree(Node root, int start, int end) {
+        if (root == null) return true;
+        if (root.value > start && root.value < end) {
+            return isTreeBinarySearchTree(root.leftChild, start, root.value) && isTreeBinarySearchTree(root.rightChild, root.value, end);
+        } else {
+            return false;
+        }
+    }
+
+    public void printNodesAtKDistance(int distance) {
+        printNodesAtKDistance(root, distance);
+    }
+
+    private void printNodesAtKDistance(Node root, int distance) {
+        if (root == null) return;
+        if (distance == 0) {
+            System.out.println(root.value);
+            return;
+        }
+        printNodesAtKDistance(root.leftChild, distance - 1);
+        printNodesAtKDistance(root.rightChild, distance - 1);
 
     }
 
