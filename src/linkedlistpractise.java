@@ -1,7 +1,5 @@
 package src;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class linkedlistpractise {
@@ -10,20 +8,39 @@ public class linkedlistpractise {
         linkedList.addLast(10);
         linkedList.addLast(20);
         linkedList.addLast(30);
-        linkedList.addFirst(30);
-        System.out.println(linkedList.indexOf(20));
-        System.out.println(linkedList.contains(100));
-        System.out.println(linkedList.contains(10));
-        System.out.println(linkedList.size());
-        System.out.println(Arrays.toString(linkedList.toArray()));
+        linkedList.addLast(40);
+        linkedList.addLast(50);
+        linkedList.getKthFromEnd(5);
+        System.out.println(linkedList.getKthFromEnd(3));
     }
 }
-
 
 class LinkedListImplementation {
     private Node first;
     private Node last;
     private int size;
+
+    public int getKthFromEnd(int k) {
+        if (isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        Node p1 = first;
+        Node p2 = first;
+        int index = 0;
+        while (index != k - 1) {
+            p2 = p2.next;
+            index++;
+            if (p2 == null) {
+                throw new IllegalArgumentException();
+            }
+        }
+        while (p2 != last) {
+            p1 = p1.next;
+            p2 = p2.next;
+        }
+        return p1.value;
+
+    }
 
     public void addFirst(int value) {
         var newNode = new Node(value);
@@ -120,16 +137,31 @@ class LinkedListImplementation {
     }
 
     public int[] toArray() {
+        System.out.println(size);
         int[] array = new int[size];
         var current = first;
         int index = 0;
         while (current != null) {
-            array[index] = current.value;
-            index++;
+            array[index++] = current.value;
             current = current.next;
         }
-
         return array;
+    }
+
+    public void reverse() {
+        if (isEmpty()) return;
+        var previous = this.first;
+        var current = previous.next;
+
+        while (current != null) {
+            var n = current.next;
+            current.next = previous;
+            previous = current;
+            current = n;
+        }
+        last = first;
+        last.next = null;
+        first = previous;
     }
 
     class Node {
