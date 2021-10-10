@@ -1,5 +1,7 @@
 package src;
 
+import java.util.ArrayList;
+
 public class TreePractise {
     public static void main(String[] args) {
         Tree tree1 = new Tree();
@@ -35,7 +37,7 @@ public class TreePractise {
 //        System.out.println(tree1.equalTree(null));
         tree1.swapRoot();
         System.out.println(tree1.isTreeBinarySearchTree());
-        tree1.printNodesAtKDistance(2);
+        tree1.getNodesAtKDistance(4);
     }
 }
 
@@ -236,18 +238,21 @@ class Tree {
         }
     }
 
-    public void printNodesAtKDistance(int distance) {
-        printNodesAtKDistance(root, distance);
+    public void getNodesAtKDistance(int distance) {
+        ArrayList<Integer> nodes = new ArrayList<>();
+        getNodesAtKDistance(root, distance, nodes);
+        
     }
 
-    private void printNodesAtKDistance(Node root, int distance) {
+    private void getNodesAtKDistance(Node root, int distance, ArrayList<Integer> nodes) {
         if (root == null) return;
         if (distance == 0) {
+            nodes.add(root.value);
             System.out.println(root.value);
             return;
         }
-        printNodesAtKDistance(root.leftChild, distance - 1);
-        printNodesAtKDistance(root.rightChild, distance - 1);
+        getNodesAtKDistance(root.leftChild, distance - 1, nodes);
+        getNodesAtKDistance(root.rightChild, distance - 1, nodes);
 
     }
 
